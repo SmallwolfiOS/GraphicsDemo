@@ -86,9 +86,34 @@
         
         
         CGContextRestoreGState(context);                                    /* 恢复当前上下文的状态 */
-        
+        CGFloat lengths[] = {10,5};
+        CGContextSetLineDash(context, 0, lengths, 2);
+        [[[UIColor blueColor]colorWithAlphaComponent:0.3] setFill];
+//        CGContextFillRect(context, CGRectMake(20, 20, frame.size.width-40, frame.size.height-40));
         CGContextAddEllipseInRect(context, CGRectMake(20, 20, frame.size.width-40, frame.size.height-40));  /* 绘制一个圆 */
                                                                             /* 不设置画笔颜色和宽度，因为原本的上下文有颜色和宽度状态 */
+        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, frame.size.width - 40, frame.size.height - 40) cornerRadius:20];
+        [path stroke];
+        //路径填充，必须是一个完整的封闭路径
+        [path fill];
+        
+        
+        
+        CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
+        CGFloat colors[] =
+        {
+            204.0 / 255.0, 224.0 / 255.0, 244.0 / 255.0, 1.00,
+            29.0 / 255.0, 156.0 / 255.0, 215.0 / 255.0, 1.00,
+            0.0 / 255.0,  50.0 / 255.0, 126.0 / 255.0, 1.00,
+        };
+        CGGradientRef gradient = CGGradientCreateWithColorComponents(rgb, colors, NULL, sizeof(colors)/(sizeof(colors[0])*4));
+        CGColorSpaceRelease(rgb);
+        CGContextDrawLinearGradient(context, gradient,CGPointMake(0.0,0.0) ,CGPointMake(0.0,frame.size.height),
+                                    kCGGradientDrawsBeforeStartLocation);
+
+        
+        
+        
         
         CGContextStrokePath(context);                                       /* 开始绘制 */
 
